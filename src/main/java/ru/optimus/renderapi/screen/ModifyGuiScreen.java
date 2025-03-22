@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import ru.optimus.renderapi.IRenderAPI;
 import ru.optimus.renderapi.RenderAPI;
 import ru.optimus.renderapi.screen.buttons.ModifyButton;
@@ -23,14 +22,15 @@ public abstract class ModifyGuiScreen extends GuiScreen {
     private final EntityPlayer player;
     private final int prevGuiIndex;
     private final Minecraft minecraft = Minecraft.getMinecraft();
-    private final ListButtons<ModifyButton<ModifyGuiScreen>> modifyButtons = new ListButtons<>();
-    private final RegistryButtonRepository<ModifyButton<ModifyGuiScreen>> repository = value -> modifyButtons.addAll(Arrays.asList(value));
+    private final ListButtons<ModifyButton<? extends ModifyGuiScreen>> modifyButtons = new ListButtons<>();
+    private final RegistryButtonRepository<ModifyButton<? extends ModifyGuiScreen>> repository = value -> modifyButtons.addAll(Arrays.asList(value));
     private ScaledResolution resolution;
     private ResolutionSizes resolutionSizes;
     private IRenderAPI renderAPI;
 
     public ModifyGuiScreen(EntityPlayer player) {
         this(player, Minecraft.getMinecraft().gameSettings.guiScale);
+
     }
 
     public ModifyGuiScreen(EntityPlayer player, int startGuiIndex) {
@@ -47,11 +47,11 @@ public abstract class ModifyGuiScreen extends GuiScreen {
         this.minecraft.gameSettings.guiScale = prevGuiIndex;
     }
 
-    public int normalizePosX(){
+    public int normalizePosX() {
         return getResolution().getScaledWidth() / 2 - normalizeX();
     }
 
-    public int normalizePosY(){
+    public int normalizePosY() {
         return getResolution().getScaledHeight() / 2 - normalizeY();
     }
 
@@ -70,17 +70,17 @@ public abstract class ModifyGuiScreen extends GuiScreen {
     }
 
     @SuppressWarnings("unchecked")
-    public void registerForce(ModifyButton<ModifyGuiScreen> modifyButton) {
+    public void registerForce(ModifyButton<? extends ModifyGuiScreen> modifyButton) {
         boolean canRegister = modifyButtons.stream().noneMatch(button -> button.xPosition == modifyButton.xPosition && button.yPosition == modifyButton.yPosition);
         if (canRegister) {
             repository.registry(modifyButton);
         }
     }
 
-    public int normalizeX(){
+    public int normalizeX() {
         int scale = minecraft.gameSettings.guiScale;
 
-        switch (scale){
+        switch (scale) {
             case 2:
                 return 320;
             case 3:
@@ -95,10 +95,10 @@ public abstract class ModifyGuiScreen extends GuiScreen {
 
     }
 
-    public int normalizeY(){
+    public int normalizeY() {
         int scale = minecraft.gameSettings.guiScale;
 
-        switch (scale){
+        switch (scale) {
             case 2:
                 return 171;
             case 3:

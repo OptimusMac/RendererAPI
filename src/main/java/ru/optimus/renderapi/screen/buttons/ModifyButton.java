@@ -17,6 +17,7 @@ public abstract class ModifyButton<T extends ModifyGuiScreen> extends GuiButton 
     private final T root;
     private final IRenderAPI renderAPI;
     private BiConsumer<Action, ModifyButton<T>> actionConsumer;
+
     private final ActionExecute<Action, ModifyButton<T>> actionFunction = (action, button) -> {
         if (actionConsumer != null)
             actionConsumer.accept(action, button);
